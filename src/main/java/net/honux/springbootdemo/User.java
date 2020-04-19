@@ -6,6 +6,7 @@ import org.springframework.data.relational.core.mapping.Embedded;
 import org.springframework.data.relational.core.mapping.MappedCollection;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,10 +25,15 @@ public class User {
     @JsonProperty
     private LocalDateTime createdDate = LocalDateTime.now();
 
+    private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+
     @MappedCollection(idColumn = "user_id")
     private Set<Game> games = new HashSet<>();
 
     private Set<ReadLog> readings = new HashSet<>();
+
+    public User() {};
 
     public User(String email) {
         this.email = email;
@@ -59,8 +65,20 @@ public class User {
         return games;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public Long getId() {
         return id;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public void removeGithub() {
@@ -75,9 +93,22 @@ public class User {
         return github;
     }
 
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
+
+    public void setCreateDateFromString(String dateTimeStr) {
+        setCreatedDate(LocalDateTime.parse(dateTimeStr, formatter));
+    }
+
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
+
+    public String getFormattedCreatedDate() {
+        return createdDate.format(formatter);
+    }
+
 
     @Override
     public String toString() {
